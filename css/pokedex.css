@@ -1,0 +1,138 @@
+.card {
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.card:hover {
+    transform: scale(1.3);
+    animation: shine-card-infinite 1s infinite;
+    z-index: 10;
+}
+
+/* Main content that gets blurred when pokedex is shown */
+.main-content {
+    transition: filter 0.3s ease;
+}
+
+.main-content.blurred {
+    filter: blur(10px);
+    pointer-events: none;
+}
+
+/* Pokedex Overlay - Fixed on top, centered */
+.pokedex-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    /* Hidden by default, show with JavaScript */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.pokedex-overlay.active {
+    display: flex;
+    pointer-events: auto;
+}
+
+/* Container for the pokedex */
+.pokedex-container {
+    margin-top: 100px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: auto;
+}
+
+/* Pokedex image - centered and sharp */
+.pokedex-img {
+    max-width: 90vw;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    z-index: 20;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.pokedex-main-screen {
+    position: absolute;
+    top: 29%;
+    left: 25%;
+    transform: translateX(-50%);
+    width: 20vw;
+    height: 25vh;
+    background-color: #064239;
+    border-radius: 20px;
+    z-index: 12;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.pokedex-name-screen {
+    position: absolute;
+    top: 33%;
+    right: 8%;
+    width: 19vw;
+    height: 12vh;
+    background-color: #064239;
+    border-radius: 20px;
+    z-index: 22;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Arrow buttons for mode navigation */
+.pokedex-arrow {
+    position: absolute;
+    z-index: 1002;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.pokedex-arrow:hover {
+    transform: scale(1.1);
+    background-color: #c82333;
+}
+
+.pokedex-arrow-left {
+    left: -80px;
+}
+
+.pokedex-arrow-right {
+    right: -80px;
+}
+
+
+@keyframes shine-card-infinite {
+    0% {
+        filter: brightness(1);
+    }
+
+    50% {
+        filter: brightness(1.4);
+    }
+
+    100% {
+        filter: brightness(1);
+    }
+}
