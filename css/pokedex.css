@@ -1,13 +1,33 @@
+@font-face {
+    font-family: 'PokemonFont';
+    src: url('../fonts/pkmn.ttf') format('truetype');
+}
+
+:root {
+    --bs-body-font-family: 'PokemonFont', sans-serif;
+    --bs-font-sans-serif: 'PokemonFont', sans-serif;
+}
+
+body {
+    font-family: 'PokemonFont', sans-serif !important;
+}
+
+* {
+    font-family: 'PokemonFont', sans-serif;
+}
+
 .card {
     width: 100%;
     height: auto;
     cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
+    box-shadow: 0 0 20px #251a2c;
 }
 
 .card:hover {
-    transform: scale(1.3);
+    transform: scale(1.2);
+    transition: transform 0.5s ease;
     animation: shine-card-infinite 1s infinite;
     z-index: 10;
 }
@@ -72,8 +92,9 @@
     width: 20vw;
     height: 25vh;
     background-color: #064239;
+    border: 2px solid #000000;
     border-radius: 20px;
-    z-index: 12;
+    z-index: 22;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -87,6 +108,55 @@
     width: 19vw;
     height: 12vh;
     background-color: #064239;
+    border: 2px solid #000000;
+    border-radius: 20px;
+    z-index: 22;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.pokedex-id-screen {
+    position: absolute;
+    bottom: 8%;
+    right: 25%;
+    width: 10vw;
+    height: 6vh;
+    background-color: #064239;
+    border: 2px solid #000000;
+    border-radius: 20px;
+    z-index: 22;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.pokedex-generation-screen {
+    position: absolute;
+    bottom: 8%;
+    right: 6%;
+    width: 10vw;
+    height: 6vh;
+    background-color: #064239;
+    border: 2px solid #000000;
+    border-radius: 20px;
+    z-index: 22;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.pokedex-mode-name-screen {
+    position: absolute;
+    bottom: 7%;
+    left: 11%;
+    width: 11vw;
+    height: 9vh;
+    background-color: #064239;
+    border: 2px solid #000000;
     border-radius: 20px;
     z-index: 22;
     display: flex;
@@ -136,3 +206,93 @@
         filter: brightness(1);
     }
 }
+
+/* Type colors*/
+.bg-normal {
+    background-color: #a8a878;
+}
+
+.bg-fire {
+    background-color: #ee8130;
+}
+
+.bg-water {
+    background-color: #6390f0;
+}
+
+.bg-grass {
+    background-color: #7ac74c;
+}
+
+.bg-electric {
+    background-color: #f7d02c;
+}
+
+.bg-ice {
+    background-color: #96d9d6;
+}
+
+.bg-fighting {
+    background-color: #c22e28;
+}
+
+.bg-poison {
+    background-color: #a33ea1;
+}
+
+.bg-ground {
+    background-color: #f7e6ac;
+}
+
+.bg-flying {
+    background-color: #a98ff3;
+}
+
+.bg-psychic {
+    background-color: #f95587;
+}
+
+.bg-bug {
+    background-color: #a6b91a;
+}
+
+.bg-rock {
+    background-color: #b6a136;
+}
+
+.bg-ghost {
+    background-color: #735cde;
+}
+
+.bg-dragon {
+    background-color: #6f8ee4;
+}
+
+.bg-steel {
+    background-color: #b7b7ce;
+}
+
+.bg-steel {
+    background-color: #b7b7ce;
+}
+/* Custom Font Sizing - Added by Antigravity */
+.card-title {
+    font-size: 0.8rem !important;
+}
+
+.pokedex-name-screen h3 {
+    font-size: 1.1rem !important;
+}
+
+.card .badge {
+    font-size: 0.6rem !important;
+}
+
+.pokedex-main-screen .badge {
+    font-size: 1rem !important;
+}
+
+.pokedex-mode-name-screen h5 {
+    font-size: 0.8rem !important;
+}
+

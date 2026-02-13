@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/pokedex.css">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/pokedex.css">
     <link rel="icon" href="img/pokeball.ico">
     <title>Pokedex</title>
 </head>
@@ -25,16 +26,8 @@
                 <!-- Search Bar -->
                 <div class="col">
                     <div class="input-group">
-                        <input type="text" class="buscar form-control rounded-pill rounded-end px-4 py-3 fs-5"
-                            placeholder="Busca el pokemon" aria-label="Search Pokemon" style="border-right: none;">
-                        <span
-                            class="input-group-text bg-white border-start-0 rounded-pill rounded-start px-4 py-3 ms-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                class="bi bi-search" viewBox="0 0 16 16">
-                                <path
-                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                            </svg>
-                        </span>
+                        <input type="text" class="buscar form-control rounded-pill px-4 py-3 fs-5"
+                            placeholder="Busca el pokemon" aria-label="Search Pokemon">
                     </div>
                 </div>
             </div>
@@ -42,10 +35,10 @@
     </header>
 
     <!-- Main Content -->
-    <main class="position-relative">
+    <main class="position-relative mt-5">
         <!-- Blurred Background Content -->
         <div class="main-content">
-            <div class="container my-5">
+            <div class="container">
                 <div class="container-cards row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-4">
                     <!-- Cards will be added here -->
                 </div>
@@ -70,8 +63,9 @@
                         </div>
                         <img src="img/pokedex.png" alt="Pokedex" class="pokedex-img">
                         <div class="pokedex-name-screen"></div>
-                        <div class="pokedex-type1-screen"></div>
-                        <div class="pokedex-type2-screen"></div>
+                        <div class="pokedex-mode-name-screen"></div>
+                        <div class="pokedex-id-screen"></div>
+                        <div class="pokedex-generation-screen"></div>
 
                         <!-- Right Arrow Button -->
                         <button class="pokedex-arrow pokedex-arrow-right btn btn-danger btn-lg">></button>
