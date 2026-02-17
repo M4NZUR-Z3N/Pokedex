@@ -473,7 +473,7 @@ arrowRight.addEventListener('click', (e) => {
 });
 
 // Event listener para el boton de sonido
-let sonidoON = false; // Inicialmente apagado
+let sonidoON = false; // Inicialmente apagado porque en algunos navegadores la musica se bloquea al cargar la pagina
 const sonidoButton = document.querySelector('.btn-sonido');
 
 // Establecer estado inicial visual (OFF)
