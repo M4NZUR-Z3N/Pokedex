@@ -9,65 +9,109 @@ let todosLosPokemon = []; // Almacena todos los Pokémon descargados
 let pokemonFiltrados = []; // Pokémon filtrados por búsqueda
 let pokemonMostrados = 0; // Cantidad de Pokémon actualmente mostrados
 const POKEMON_POR_PAGINA = 20;
-const TOTAL_POKEMON = 1025; // Primera generación
+const TOTAL_POKEMON = 1025; // Todas las generaciones
 
 // Función que obtiene los Pokémon de la API
-// Función que obtiene los Pokémon de la API en español
 async function obtenerPokemons() {
     try {
-        // Muestra un mensaje de carga
-        containerCards.innerHTML = '<div class="col-12 text-center"><h3 class="text-white">Cargando Pokémon...</h3></div>';
+        // Muestra barra de carga
+        containerCards.innerHTML = `
+            <div class="col-12 d-flex flex-column justify-content-center align-items-center" style="min-height: 40vw; min-width: 40vw;">
+                <h3 class="text-dark mb-3">Cargando Pokedex...</h3>
+                <div class="progress w-100 shadow-sm border border-2 border-dark" style="height: 30px;">
+                    <div id="pokedex-progress" 
+                         class="progress-bar progress-bar-striped progress-bar-animated bg-danger" 
+                         role="progressbar" 
+                         style="width: 0%" 
+                         aria-valuenow="0" 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                    </div>
+                </div>
+                <h5 id="progress-text" class="mt-2 text-dark">0 / ${TOTAL_POKEMON}</h5>
+            </div>
+        `;
+
+        const progressBar = document.getElementById('pokedex-progress');
+        const progressText = document.getElementById('progress-text');
 
         // Obtener todos los Pokémon
         const response = await fetch(`${URL_POKEMON}?limit=${TOTAL_POKEMON}`);
         const data = await response.json();
 
+        let completados = 0;
+        const total = data.results.length;
+
         // Obtener detalles de cada Pokémon
         const promesas = data.results.map(async (pokemon) => {
-            const res = await fetch(pokemon.url);
-            const detalles = await res.json();
+            try {
+                const res = await fetch(pokemon.url);
+                const detalles = await res.json();
 
-            // Nombre
-            const speciesRes = await fetch(detalles.species.url);
-            const speciesData = await speciesRes.json();
-            const nombreES = speciesData.names.find(n => n.language.name === 'es')?.name || detalles.name;
+                // Nombre
+                const speciesRes = await fetch(detalles.species.url);
+                const speciesData = await speciesRes.json();
+                const nombreES = speciesData.names.find(n => n.language.name === 'es')?.name || detalles.name;
 
-            // Tipo 1
-            const tipo1Res = await fetch(detalles.types[0].type.url);
-            const tipo1Data = await tipo1Res.json();
-            const tipo1ES = tipo1Data.names.find(n => n.language.name === 'es')?.name || detalles.types[0].type.name;
+                // Tipo 1
+                const tipo1Res = await fetch(detalles.types[0].type.url);
+                const tipo1Data = await tipo1Res.json();
+                const tipo1ES = tipo1Data.names.find(n => n.language.name === 'es')?.name || detalles.types[0].type.name;
 
-            // Tipo 2 (si existe)
-            let tipo2ES = '';
-            if (detalles.types[1]) {
-                const tipo2Res = await fetch(detalles.types[1].type.url);
-                const tipo2Data = await tipo2Res.json();
-                tipo2ES = tipo2Data.names.find(n => n.language.name === 'es')?.name || detalles.types[1].type.name;
+                // Tipo 2 (si existe)
+                let tipo2ES = '';
+                if (detalles.types[1]) {
+                    const tipo2Res = await fetch(detalles.types[1].type.url);
+                    const tipo2Data = await tipo2Res.json();
+                    tipo2ES = tipo2Data.names.find(n => n.language.name === 'es')?.name || detalles.types[1].type.name;
+                }
+
+                // Habilidades
+                const habilidadesES = await Promise.all(detalles.abilities.map(async (a) => {
+                    const abilityRes = await fetch(a.ability.url);
+                    const abilityData = await abilityRes.json();
+                    return abilityData.names.find(n => n.language.name === 'es')?.name || a.ability.name;
+                }));
+
+                // Actualizar barra de progreso
+                completados++;
+                if (progressBar && progressText) {
+                    const porcentaje = Math.round((completados / total) * 100);
+                    progressBar.style.width = `${porcentaje}%`;
+                    progressBar.setAttribute('aria-valuenow', porcentaje);
+                    progressText.innerText = `${completados} / ${total}`;
+                }
+
+                return {
+                    id: String(detalles.id).padStart(3, '0'),
+                    nombre: nombreES,
+                    img: detalles.sprites.other['official-artwork'].front_default || detalles.sprites.front_default,
+                    sprite: detalles.sprites.front_default,
+                    tipo1: tipo1ES,
+                    tipo2: tipo2ES,
+                    peso: (detalles.weight / 10).toFixed(1), // peso en kg
+                    altura: (detalles.height / 10).toFixed(1), // altura en m
+                    habilidades: habilidadesES.join(', '),
+                    speciesUrl: detalles.species.url
+                };
+            } catch (err) {
+                console.warn(`Error cargando pokemon ${pokemon.name}`, err);
+                completados++; // Contar como completado aunque falle para no trabar la barra
+                return null; // Retornar null para filtrar después
             }
-
-            // Habilidades
-            const habilidadesES = await Promise.all(detalles.abilities.map(async (a) => {
-                const abilityRes = await fetch(a.ability.url);
-                const abilityData = await abilityRes.json();
-                return abilityData.names.find(n => n.language.name === 'es')?.name || a.ability.name;
-            }));
-
-            return {
-                id: String(detalles.id).padStart(3, '0'),
-                nombre: nombreES,
-                img: detalles.sprites.other['official-artwork'].front_default || detalles.sprites.front_default,
-                sprite: detalles.sprites.front_default,
-                tipo1: tipo1ES,
-                tipo2: tipo2ES,
-                peso: (detalles.weight / 10).toFixed(1), // peso en kg
-                altura: (detalles.height / 10).toFixed(1), // altura en m
-                habilidades: habilidadesES.join(', '),
-                speciesUrl: detalles.species.url
-            };
         });
 
-        todosLosPokemon = await Promise.all(promesas);
-        pokemonFiltrados = [...todosLosPokemon]; // Inicialmente, todos están filtrados
+        const resultados = await Promise.all(promesas);
+
+        // Aseguramos que la barra llegue al 100% visualmente y el texto esté correcto
+        if (progressBar) progressBar.style.width = '100%';
+        if (progressText) progressText.innerText = `${total} / ${total}`;
+
+        // Esperamos un momento para que la animación de CSS (transición) termine y el usuario vea la barra llena
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        todosLosPokemon = resultados.filter(p => p !== null); // Filtrar nulos
+        pokemonFiltrados = [...todosLosPokemon];
 
         // Limpiar el contenedor y mostrar los primeros 20
         containerCards.innerHTML = '';
@@ -143,7 +187,7 @@ function filtrarPokemon(textoBusqueda) {
         // Filtrar por nombre o ID
         pokemonFiltrados = todosLosPokemon.filter(pokemon =>
             pokemon.nombre.toLowerCase().includes(textoLower) ||
-            pokemon.id.includes(textoLower)
+            pokemon.id.includes(textoLower) // Tambien se puede buscar por ID
         );
     }
 
@@ -152,7 +196,7 @@ function filtrarPokemon(textoBusqueda) {
     containerCards.innerHTML = '';
 
     if (pokemonFiltrados.length === 0) {
-        containerCards.innerHTML = '<div class="col-12 text-center"><h3 class="text-white">No se encontraron Pokémon</h3></div>';
+        containerCards.innerHTML = '<div class="col-12 text-center"><h3 class="text-dark">No se encontraron Pokémon</h3></div>';
         cargarMas.style.display = 'none';
     } else {
         cargarMasPokemon();
@@ -233,15 +277,15 @@ const pokedexModes = [
     {
         name: 'Descripcion',
         render: (pokemon) => `
-            <div class="text-white p-3 h-100 d-flex flex-column justify-content-center" style="font-size: 0.95rem;">
-                <div class="text-center">${pokemon.descripcion || 'Loading...'}</div>
-            </div>
+            
+                <div class="tamano-texto text-center text-white p-3 h-100 d-flex flex-column justify-content-center">${pokemon.descripcion || 'Loading...'}</div>
+            
         `
     },
     {
         name: 'Peso',
         render: (pokemon) => `
-            <div class="text-white p-3 h-100 d-flex flex-column justify-content-center align-items-center" style="font-size: 1.5rem;">
+            <div class="text-white p-3 h-100 d-flex flex-column justify-content-center align-items-center" style="font-size: 1.5em;">
                 <div class="fs-3">${pokemon.peso} kg</div>
             </div>
         `
@@ -249,7 +293,7 @@ const pokedexModes = [
     {
         name: 'Altura',
         render: (pokemon) => `
-            <div class="text-white p-3 h-100 d-flex flex-column justify-content-center align-items-center" style="font-size: 1.5rem;">
+            <div class="text-white p-3 h-100 d-flex flex-column justify-content-center align-items-center" style="font-size: 1.5em;">
                 <div class="fs-3">${pokemon.altura} m</div>
             </div>
         `
@@ -257,7 +301,7 @@ const pokedexModes = [
     {
         name: 'Habilidades',
         render: (pokemon) => `
-            <div class="text-white p-3 h-100 d-flex flex-column justify-content-center" style="font-size: 1.1rem;">
+            <div class="text-white p-3 h-100 d-flex flex-column justify-content-center" style="font-size: 1.1em;">
                 <div class="text-center">${pokemon.habilidades}</div>
             </div>
         `
@@ -371,13 +415,13 @@ async function mostrarPokedex(pokemonId) {
     mainContent.classList.add('blurred');
 }
 
-// Funcion que oculta la Pokedex
+// Funcion que oculta la Pokedex quitando el efecto de desenfoque
 function ocultarPokedex() {
     pokedexOverlay.classList.remove('active');
     mainContent.classList.remove('blurred');
 }
 
-// Cierra la Pokedex al hacer clic en el overlay
+// Cierra la Pokedex al hacer clic en el overlay desenfocado
 pokedexOverlay.addEventListener('click', (e) => {
     if (e.target === pokedexOverlay || e.target.classList.contains('pokedex-container')) {
         ocultarPokedex();
@@ -409,15 +453,55 @@ document.addEventListener('keydown', (e) => {
 });
 
 // Event listeners para los botones de flecha
+const botonA = new Audio('../audios/boton-a.mp3');
+botonA.volume = 0.5;
 arrowLeft.addEventListener('click', (e) => {
+    if (sonidoON) {
+        botonA.currentTime = 0;
+        botonA.play();
+    }
     e.stopPropagation();
     changeMode(-1);
 });
-
 arrowRight.addEventListener('click', (e) => {
+    if (sonidoON) {
+        botonA.currentTime = 0;
+        botonA.play();
+    }
     e.stopPropagation();
     changeMode(1);
 });
+
+// Event listener para el boton de sonido
+let sonidoON = false; // Inicialmente apagado porque en algunos navegadores la musica se bloquea al cargar la pagina
+const sonidoButton = document.querySelector('.btn-sonido');
+
+// Establecer estado inicial visual (OFF)
+sonidoButton.innerHTML = '<img src="img/sonidoOff.png" alt="Sonido" class="img-fluid">';
+sonidoButton.classList.add('btn-sonido-off');
+sonidoButton.classList.remove('btn-sonido-on');
+
+// Musica de fondo
+const musicaFondo = new Audio('../audios/cancionFondo.mp3');
+musicaFondo.loop = true;
+musicaFondo.volume = 0.05; // Volumen mas bajo para fondo
+
+function toggleSound() {
+    sonidoON = !sonidoON;
+    if (sonidoON) {
+        sonidoButton.innerHTML = '<img src="img/sonidoOn.png" alt="Sonido" class="img-fluid">';
+        sonidoButton.classList.add('btn-sonido-on');
+        sonidoButton.classList.remove('btn-sonido-off');
+        musicaFondo.play().catch(error => console.log("Error al reproducir:", error));
+    } else {
+        sonidoButton.innerHTML = '<img src="img/sonidoOff.png" alt="Sonido" class="img-fluid">';
+        sonidoButton.classList.add('btn-sonido-off');
+        sonidoButton.classList.remove('btn-sonido-on');
+        musicaFondo.pause();
+    }
+}
+
+sonidoButton.addEventListener('click', toggleSound);
 
 // Inicializa al cargar la página
 obtenerPokemons();

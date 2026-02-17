@@ -14,7 +14,7 @@
 
 <body class="bg-light vh-100">
 
-    <!-- Header with Logo and Search Bar -->
+    <!-- Header (Logo y barra de búsqueda) -->
     <header class="bg-dark py-3 shadow-sm">
         <div class="container">
             <div class="row align-items-center">
@@ -23,7 +23,7 @@
                     <img src="img/pokeball.png" alt="Pokeball Logo" class="img-fluid"
                         style="width: 60px; height: 60px;">
                 </div>
-                <!-- Search Bar -->
+                <!-- Barra de búsqueda -->
                 <div class="col">
                     <div class="input-group">
                         <input type="text" class="buscar form-control rounded-pill px-4 py-3 fs-5"
@@ -34,41 +34,39 @@
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="position-relative mt-5">
-        <!-- Blurred Background Content -->
+        <button class="btn-sonido btn-sonido-off btn">
+            <img src="img/sonidoOff.png" alt="Sonido" class="img-fluid">
+        </button>
         <div class="main-content">
             <div class="container">
                 <div class="container-cards row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-4">
-                    <!-- Cards will be added here -->
+                    <!-- Las cartas se añaden aqui -->
                 </div>
             </div>
-
-            <div class="text-center my-4 pb-5">
-                <button class="cargar-mas btn btn-danger btn-lg px-5 py-3">
-                    Cargar más
-                </button>
-            </div>
+        </div>
+        <div class="center-button text-center my-4 pb-5">
+            <button class="cargar-mas btn btn-danger btn-lg px-5 py-3">
+                Cargar más
+            </button>
         </div>
 
-        <!-- Pokedex Overlay (NOT blurred) -->
+        <!-- Pokedex sobrepuesta -->
         <div class="pokedex-overlay">
             <div class="pokedex-container">
-                <!-- Left Arrow Button -->
-                <button class="pokedex-arrow pokedex-arrow-left btn btn-danger btn-lg">
-                    < </button>
+                <!-- Botón izquierdo -->
+                <button class="pokedex-arrow pokedex-arrow-left btn btn-lg">&lt;</button>
 
-                        <div class="pokedex-main-screen">
-                            <!-- Content will be dynamically loaded -->
-                        </div>
-                        <img src="img/pokedex.png" alt="Pokedex" class="pokedex-img">
-                        <div class="pokedex-name-screen"></div>
-                        <div class="pokedex-mode-name-screen"></div>
-                        <div class="pokedex-id-screen"></div>
-                        <div class="pokedex-generation-screen"></div>
+                <!-- Información se genera dinámicamente -->
+                <div class="pokedex-main-screen"></div>
+                <img src="img/pokedex.png" alt="Pokedex" class="pokedex-img">
+                <div class="pokedex-name-screen"></div>
+                <div class="pokedex-mode-name-screen"></div>
+                <div class="pokedex-id-screen"></div>
+                <div class="pokedex-generation-screen"></div>
 
-                        <!-- Right Arrow Button -->
-                        <button class="pokedex-arrow pokedex-arrow-right btn btn-danger btn-lg">></button>
+                <!-- Botón derecho -->
+                <button class="pokedex-arrow pokedex-arrow-right btn btn-lg">&gt;</button>
             </div>
         </div>
     </main>
