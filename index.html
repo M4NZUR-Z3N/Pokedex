@@ -39,14 +39,14 @@
             <img src="img/sonidoOff.png" alt="Sonido" class="img-fluid">
         </button>
         <div class="main-content">
-            <div class="container">
-                <div class="container-cards row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-4">
+            <div class="container" id="cartas-wrapper">
+                <div class="container-cards row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 g-4">
                     <!-- Las cartas se añaden aqui -->
                 </div>
             </div>
         </div>
         <div class="center-button text-center my-4 pb-5">
-            <button class="cargar-mas btn btn-danger btn-lg px-5 py-3">
+            <button class="cargar-mas d-none btn btn-danger btn-lg px-5 py-3">
                 Cargar más
             </button>
         </div>
@@ -57,7 +57,7 @@
                 <!-- Botón izquierdo -->
                 <button class="pokedex-arrow pokedex-arrow-left btn btn-lg">&lt;</button>
 
-                <!-- Información se genera dinámicamente -->
+                <!-- La información se genera dinámicamente -->
                 <div class="pokedex-main-screen"></div>
                 <img src="img/pokedex.png" alt="Pokedex" class="pokedex-img">
                 <div class="pokedex-name-screen"></div>

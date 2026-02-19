@@ -1,6 +1,7 @@
 const buscar = document.querySelector(".buscar");
 const containerCards = document.querySelector(".container-cards");
 const cargarMas = document.querySelector(".cargar-mas");
+const container = document.querySelector(".card-wrapper");
 
 const URL_POKEMON = "https://pokeapi.co/api/v2/pokemon/";
 
@@ -48,10 +49,15 @@ async function obtenerPokemons() {
                 const res = await fetch(pokemon.url);
                 const detalles = await res.json();
 
-                // Nombre
+                // Nombre y Especie (mismo fetch)
                 const speciesRes = await fetch(detalles.species.url);
                 const speciesData = await speciesRes.json();
                 const nombreES = speciesData.names.find(n => n.language.name === 'es')?.name || detalles.name;
+
+                // Especie real (ej: "Pokémon Semilla", "Pokémon Ratón")
+                // El campo 'genera' contiene la categoría del Pokémon, no su nombre
+                const especieES = speciesData.genera.find(g => g.language.name === 'es')?.genus
+                    || 'Desconocido';
 
                 // Tipo 1
                 const tipo1Res = await fetch(detalles.types[0].type.url);
@@ -92,7 +98,8 @@ async function obtenerPokemons() {
                     peso: (detalles.weight / 10).toFixed(1), // peso en kg
                     altura: (detalles.height / 10).toFixed(1), // altura en m
                     habilidades: habilidadesES.join(', '),
-                    speciesUrl: detalles.species.url
+                    speciesUrl: detalles.species.url,
+                    species: especieES  // Ej: "Pokémon Semilla", "Pokémon Ratón"
                 };
             } catch (err) {
                 console.warn(`Error cargando pokemon ${pokemon.name}`, err);
@@ -109,6 +116,12 @@ async function obtenerPokemons() {
 
         // Esperamos un momento para que la animación de CSS (transición) termine y el usuario vea la barra llena
         await new Promise(resolve => setTimeout(resolve, 800));
+
+        // Cuando el programa carga las cartas se muestra el container completo para que se vean todas las cartas con buen tamaño
+        if (container) {
+            container.style.maxWidth = "100vw";
+            container.style.width = "100vw";
+        }
 
         todosLosPokemon = resultados.filter(p => p !== null); // Filtrar nulos
         pokemonFiltrados = [...todosLosPokemon];
@@ -140,6 +153,7 @@ function cargarMasPokemon() {
         cargarMas.style.display = 'none';
     } else {
         cargarMas.style.display = 'block';
+        cargarMas.classList.remove('d-none'); // El boton de cargar mas aparece cuando carga la pagina
     }
 }
 
@@ -156,7 +170,7 @@ function crearCartaPokemon(pokemon) {
         <div class="col my-4">
             <div class="card bg-dark border border-4 border-black" data-pokemon-id="${pokemon.id}">
                 <div class="card-header p-2">
-                    <span class="badge w-100 mb-2">#${pokemon.id}</span>
+                    <span class="badge text-center w-100 mb-2">#${pokemon.id}</span>
                     <div class="d-flex align-items-center justify-content-between">
                         <span class="badge ${devolverColor(pokemon.tipo1)} ${tipoWidth} text-center">${pokemon.tipo1}</span>
                         ${tipo2HTML}
@@ -320,6 +334,14 @@ const pokedexModes = [
                 </div>
             `;
         }
+    },
+    {
+        name: 'Especie',
+        render: (pokemon) => `
+            <div class="text-white p-3 h-100 d-flex flex-column justify-content-center align-items-center" style="font-size: 1.5em;">
+                <div class="fs-5 text-center">${pokemon.species}</div>
+            </div>
+        `
     }
 ];
 
